@@ -72,7 +72,7 @@ h1, h2, h3, h4 {
   letter-spacing: -.035em;
   line-height: 1.04;
 }
-.brand-logo { height: 34px; width: auto; display: block; }
+.brand-logo { height: 34px; width: 34px; display: block; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .section-title {
   font-size: clamp(2.3rem, 4.6vw, 3.7rem);
   margin-bottom: 0;
@@ -134,7 +134,7 @@ h1, h2, h3, h4 {
 .site-nav .nav-link { font-size: .9rem; font-weight: 500; color: var(--fg-muted); letter-spacing: .005em; }
 .site-nav .nav-link:hover, .site-nav .nav-link.active { color: var(--fg); }
 .site-nav .brand { font-family: var(--font-display); font-size: 1.22rem; letter-spacing: -.02em; }
-.brand-mark { border-radius: 12px; }
+.brand-mark { border-radius: 50%; }
 
 /* 5. HERO ----------------------------------------------------------------- */
 .hero2 {
