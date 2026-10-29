@@ -20,7 +20,7 @@ export const UI = {
     experience: { title: 'Perjalanan kami', now: 'Sekarang', present: 'sekarang' },
     certs: { title: 'Sertifikasi', subtitle: 'Bukti kompetensi yang kami miliki.', issued: 'Diterbitkan', expires: 'Berlaku hingga', credential: 'ID Kredensial', verify: 'Lihat kredensial' },
     contact: {
-      title: 'Punya proyek? Mari berdiskusi.', subtitle: 'Ceritakan kebutuhan Anda, kami akan merespons secepatnya.',
+      title: 'Mari terhubung.', subtitle: 'Punya ide, pertanyaan, atau ingin berkolaborasi? Kirim pesan dan saya akan membalas secepatnya.',
       email: 'Email', location: 'Lokasi', response: 'Waktu respons', card_title: 'Hubungi kami langsung',
       card_text: 'Pilih saluran yang paling nyaman untuk Anda.', send_email: 'Kirim email', send_wa: 'Chat WhatsApp',
     },
@@ -54,7 +54,7 @@ export const UI = {
     experience: { title: 'Our journey', now: 'Now', present: 'present' },
     certs: { title: 'Certifications', subtitle: 'Proof of the skills we hold.', issued: 'Issued', expires: 'Valid until', credential: 'Credential ID', verify: 'View credential' },
     contact: {
-      title: 'Got a project? Let’s talk.', subtitle: 'Tell us what you need and we will get back to you quickly.',
+      title: 'Let’s connect.', subtitle: 'Have an idea, a question, or want to collaborate? Send a message and I’ll get back to you soon.',
       email: 'Email', location: 'Location', response: 'Response time', card_title: 'Reach us directly',
       card_text: 'Pick whichever channel is most comfortable for you.', send_email: 'Send an email', send_wa: 'Chat on WhatsApp',
     },

@@ -9,6 +9,14 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const hashTo = (id) => (pathname === '/' ? `#${id}` : `/#${id}`);
 
+  // Tutup menu mobile setelah link ditekan, supaya tidak menutupi halaman
+  const closeMenu = () => {
+    const el = document.getElementById('mainNav');
+    if (el && el.classList.contains('show') && window.bootstrap) {
+      window.bootstrap.Collapse.getOrCreateInstance(el, { toggle: false }).hide();
+    }
+  };
+
   const sections = [
     ['about', 'nav.about'],
   ];
@@ -59,17 +67,17 @@ export default function Navbar() {
             <ul className="navbar-nav ms-lg-auto me-lg-3 mt-3 mt-lg-0">
               {sections.map(([id, key]) => (
                 <li key={id} className="nav-item">
-                  <Link className="nav-link" data-spy={id} to={hashTo(id)}>{t(key)}</Link>
+                  <Link className="nav-link" data-spy={id} to={hashTo(id)} onClick={closeMenu}>{t(key)}</Link>
                 </li>
               ))}
               <li className="nav-item">
-                <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/projects">
+                <NavLink className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`} to="/projects" onClick={closeMenu}>
                   {t('nav.projects')}
                 </NavLink>
               </li>
               {later.map(([id, key]) => (
                 <li key={id} className="nav-item">
-                  <Link className="nav-link" data-spy={id} to={hashTo(id)}>{t(key)}</Link>
+                  <Link className="nav-link" data-spy={id} to={hashTo(id)} onClick={closeMenu}>{t(key)}</Link>
                 </li>
               ))}
             </ul>
