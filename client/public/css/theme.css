@@ -804,3 +804,23 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spac
 .typing span:nth-child(3) { animation-delay: .3s; }
 @keyframes typing { 0%, 60%, 100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
 @media (max-width: 640px) { .chat-fab { left: 14px; bottom: 14px; } .chat-panel { left: 14px; bottom: 84px; } }
+
+/* 24. PERBAIKAN TAMPILAN HP ------------------------------------------------ */
+@media (max-width: 640px) {
+  /* ruang kiri-kanan lebih lega (navbar tidak ikut diubah) */
+  .hero2 > .container,
+  .section > .container,
+  .site-footer .container { padding-left: 1.25rem; padding-right: 1.25rem; }
+
+  /* hero: jarak antara peran, deskripsi, dan tombol */
+  .hero2 { padding-top: calc(var(--nav-h) + 28px); padding-bottom: 56px; }
+  .hero2 .role-rotor { margin-top: 1.25rem; margin-bottom: 1.5rem; font-size: 1rem; }
+  .hero2 .hero2-sub { font-size: 1rem; line-height: 1.7; max-width: none; margin-bottom: 1.5rem; }
+
+  /* tombol penuh selebar layar dan sama lebar */
+  .hero2 .hero-actions { flex-direction: column; gap: .7rem; margin-top: 0; }
+  .hero2 .hero-actions .btn-lg { width: 100%; min-width: 0; justify-content: center; }
+
+  /* tombol chat lebih kecil dan tidak menutupi konten */
+  .chat-fab { width: 50px; height: 50px; font-size: 1.15rem; left: 16px; bottom: 16px; }
+}
