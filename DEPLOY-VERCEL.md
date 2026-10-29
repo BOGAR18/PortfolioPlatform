@@ -53,3 +53,22 @@ git push -u origin main
 - Batas body request Vercel Hobby ±4,5 MB. Upload banyak foto sekaligus yang totalnya lebih besar akan gagal; unggah bertahap.
 - Foto lama di `public/uploads` lokal perlu diunggah manual ke bucket `uploads` dengan struktur folder sama (`projects/`, `tech/`, `certifications/`).
 - Ganti password database dan admin bila pernah terlihat di tempat lain.
+
+---
+
+# Revisi: terjemahan otomatis, popup notifikasi, teks, dan ikon
+
+## Langkah menerapkan (setelah file disalin dan di-push)
+1. Letakkan ikon Anda di `client/public/brand/icon.png` (nama persis, huruf kecil semua).
+2. Di komputer, dengan `.env` yang berisi `DATABASE_URL` Supabase:
+   ```bash
+   npm install
+   npm run db:migrate    # menambah kolom terjemahan Inggris
+   npm run db:revisi     # ganti judul About lama + terjemahkan proyek/perjalanan yang sudah ada
+   ```
+3. `git add . && git commit -m "Revisi terjemahan, popup, ikon" && git push`. Vercel akan deploy otomatis.
+
+## Tentang terjemahan
+Terjemahan memakai endpoint terjemahan Google tanpa API key (gratis, tanpa kartu kredit). Endpoint ini tidak resmi,
+jadi sewaktu-waktu bisa membatasi permintaan. Jika gagal, proyek tetap tersimpan dan versi Inggris memakai teks Indonesia.
+Untuk menerjemahkan ulang semua data: `npm run db:revisi -- --force`

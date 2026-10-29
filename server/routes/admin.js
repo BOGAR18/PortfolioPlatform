@@ -6,6 +6,7 @@ import { attachRelations, findProjectById, uniqueSlug, slugify } from '../lib/pr
 import {
   TEXT_KEYS, SINGLE_KEYS, COLOR_KEYS, readSettingsMap, upsertSetting,
 } from '../lib/settings.js';
+import { resolveEn } from '../lib/translate.js';
 import {
   str, isInt, isUrl, isEmail, isTrue, toArray, fail, parseJsonArray,
 } from '../lib/validate.js';
@@ -124,13 +125,17 @@ router.post('/projects', projectImageUpload.array('images', 10), async (req, res
   const client = await pool.connect();
   try {
     const slug = await uniqueSlug(str(req.body.slug) ?? data.title);
+    const [title_en, summary_en, description_en] = await Promise.all([
+      resolveEn(data.title), resolveEn(data.summary), resolveEn(data.description),
+    ]);
     await client.query('BEGIN');
     const { rows: [project] } = await client.query(
       `INSERT INTO projects
-         (title, slug, summary, description, project_url, repo_url, year, is_featured, sort_order)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, slug`,
+         (title, slug, summary, description, project_url, repo_url, year, is_featured, sort_order,
+          title_en, summary_en, description_en)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id, slug`,
       [data.title, slug, data.summary, data.description, data.project_url, data.repo_url,
-       data.year, data.is_featured, data.sort_order],
+       data.year, data.is_featured, data.sort_order, title_en, summary_en, description_en],
     );
     await syncTechs(client, project.id, data.techs);
     await addImages(client, project.id, files, 0);
@@ -180,13 +185,19 @@ router.put('/projects/:id', projectImageUpload.array('images', 10), async (req, 
 
   const client = await pool.connect();
   try {
+    const [title_en, summary_en, description_en] = await Promise.all([
+      resolveEn(data.title, existing.title, existing.title_en),
+      resolveEn(data.summary, existing.summary, existing.summary_en),
+      resolveEn(data.description, existing.description, existing.description_en),
+    ]);
     await client.query('BEGIN');
     await client.query(
       `UPDATE projects SET title = $1, slug = $2, summary = $3, description = $4, project_url = $5,
-              repo_url = $6, year = $7, is_featured = $8, sort_order = $9, updated_at = NOW()
-        WHERE id = $10`,
+              repo_url = $6, year = $7, is_featured = $8, sort_order = $9,
+              title_en = $10, summary_en = $11, description_en = $12, updated_at = NOW()
+        WHERE id = $13`,
       [data.title, slug, data.summary, data.description, data.project_url, data.repo_url,
-       data.year, data.is_featured, data.sort_order, id],
+       data.year, data.is_featured, data.sort_order, title_en, summary_en, description_en, id],
     );
     await syncTechs(client, id, data.techs);
 

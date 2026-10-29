@@ -58,6 +58,8 @@ export function AppProvider({ children }) {
       if (lang !== 'id' && settings[`${key}_en`]) return settings[`${key}_en`];
       return settings[key] ?? '';
     };
+    // Teks konten per-baris (proyek, perjalanan): versi Inggris jika ada, jika tidak teks Indonesia
+    const loc = (obj, key) => (lang !== 'id' && obj?.[`${key}_en`]) || obj?.[key] || '';
     // Padanan setting_json()
     const enValues = parseList(settings.about_values_en);
     const aboutValues = lang !== 'id' && enValues.length ? enValues : parseList(settings.about_values);
@@ -76,7 +78,7 @@ export function AppProvider({ children }) {
     };
 
     return {
-      lang, setLang: setLangState, t, pick, aboutValues, settings,
+      lang, setLang: setLangState, t, pick, loc, aboutValues, settings,
       theme, setTheme: setThemeState,
       auth, refreshAuth, login, register, logout,
     };

@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { FieldError, invalidClass } from '../components/FormBits.jsx';
+import { useNotify } from '../context/NotifyContext.jsx';
 
 export default function Register() {
   const { auth, register, t } = useApp();
   const navigate = useNavigate();
+  const notify = useNotify();
   const [form, setForm] = useState({ name: '', email: '', password: '', password_confirmation: '' });
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
@@ -26,6 +28,7 @@ export default function Register() {
       await register(form);
       navigate('/admin');
     } catch (err) {
+      notify.error(err.message);
       setErrors(err.errors && Object.keys(err.errors).length ? err.errors : { email: err.message });
     } finally {
       setBusy(false);

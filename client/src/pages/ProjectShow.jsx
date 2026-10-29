@@ -8,7 +8,7 @@ import { uploadUrl } from '../lib/format.js';
 
 export default function ProjectShow() {
   const { slug } = useParams();
-  const { t } = useApp();
+  const { t, loc } = useApp();
   const [p, setP] = useState(null);
   const [error, setError] = useState('');
 
@@ -19,8 +19,8 @@ export default function ProjectShow() {
   }, [slug]);
 
   useEffect(() => {
-    if (p) document.title = `${p.title} · ${APP_NAME}`;
-  }, [p]);
+    if (p) document.title = `${loc(p, 'title')} · ${APP_NAME}`;
+  }, [p, loc]);
 
   if (error) return <p className="container"><span className="alert alert-danger d-block">{error}</span></p>;
   if (!p) return <p className="container py-5">{t('loading')}</p>;
@@ -32,8 +32,8 @@ export default function ProjectShow() {
       <section className="page-head pb-0">
         <div className="container">
           <Link to="/projects" className="back-link"><i className="bi bi-arrow-left" />{t('projects.back')}</Link>
-          <h1 className="section-title">{p.title}</h1>
-          <p className="section-sub mb-3">{p.summary}</p>
+          <h1 className="section-title">{loc(p, 'title')}</h1>
+          <p className="section-sub mb-3">{loc(p, 'summary')}</p>
         </div>
       </section>
 
@@ -62,7 +62,7 @@ export default function ProjectShow() {
                   <div className="carousel-inner">
                     {images.map((img, i) => (
                       <div key={img.id} className={`carousel-item${i === 0 ? ' active' : ''}`}>
-                        <img src={uploadUrl(img.path)} alt={img.caption || p.title} />
+                        <img src={uploadUrl(img.path)} alt={img.caption || loc(p, 'title')} />
                         {img.caption && <div className="carousel-caption">{img.caption}</div>}
                       </div>
                     ))}
@@ -88,7 +88,7 @@ export default function ProjectShow() {
               {p.description && (
                 <div className="prose mt-5">
                   <h2 className="h5 mb-3">{t('projects.overview')}</h2>
-                  <div style={{ whiteSpace: 'pre-line' }}>{p.description}</div>
+                  <div style={{ whiteSpace: 'pre-line' }}>{loc(p, 'description')}</div>
                 </div>
               )}
             </div>

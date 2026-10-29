@@ -86,3 +86,10 @@ CREATE TABLE IF NOT EXISTS experiences (
     created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Terjemahan Inggris otomatis (diisi server saat menyimpan)
+ALTER TABLE projects    ADD COLUMN IF NOT EXISTS title_en       VARCHAR(255);
+ALTER TABLE projects    ADD COLUMN IF NOT EXISTS summary_en     TEXT;
+ALTER TABLE projects    ADD COLUMN IF NOT EXISTS description_en TEXT;
+ALTER TABLE experiences ADD COLUMN IF NOT EXISTS role_en        VARCHAR(255);
+ALTER TABLE experiences ADD COLUMN IF NOT EXISTS description_en TEXT;

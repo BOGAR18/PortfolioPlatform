@@ -2,21 +2,23 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { AdminTop } from '../../components/AdminLayout.jsx';
-import Alert from '../../components/Alert.jsx';
+import { useNotify } from '../../context/NotifyContext.jsx';
 
 export default function TechCategories() {
   const location = useLocation();
   const [rows, setRows] = useState(null);
-  const [error, setError] = useState('');
+  const notify = useNotify();
+  const setError = (m) => { if (m) notify.error(m); };
 
   const load = () => api('/admin/tech-categories').then(setRows).catch((e) => setError(e.message));
   useEffect(() => { load(); }, []);
 
   const remove = async (c) => {
-    if (!confirm(`Hapus kategori ini beserta ${c.items_count} item di dalamnya?`)) return;
+    if (!(await notify.confirm(`Hapus kategori ini beserta ${c.items_count} item di dalamnya?`))) return;
     try {
       await api(`/admin/tech-categories/${c.id}`, { method: 'DELETE' });
       load();
+      notify.success('Data berhasil dihapus.');
     } catch (e) { setError(e.message); }
   };
 
@@ -26,8 +28,6 @@ export default function TechCategories() {
         title="Kategori Tech"
         actions={<Link to="/admin/tech-categories/new" className="btn btn-accent btn-sm"><i className="bi bi-plus-lg me-1" />Tambah kategori</Link>}
       />
-      {location.state?.flash && <Alert key={location.key} type="success">{location.state.flash}</Alert>}
-      {error && <div className="alert alert-danger">{error}</div>}
 
       <div className="admin-card">
         <div className="table-responsive">

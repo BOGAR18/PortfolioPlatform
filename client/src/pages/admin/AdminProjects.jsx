@@ -2,22 +2,24 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { AdminTop } from '../../components/AdminLayout.jsx';
-import Alert from '../../components/Alert.jsx';
+import { useNotify } from '../../context/NotifyContext.jsx';
 import { uploadUrl } from '../../lib/format.js';
 
 export default function AdminProjects() {
   const location = useLocation();
   const [rows, setRows] = useState(null);
-  const [error, setError] = useState('');
+  const notify = useNotify();
+  const setError = (m) => { if (m) notify.error(m); };
 
   const load = () => api('/admin/projects').then(setRows).catch((e) => setError(e.message));
   useEffect(() => { load(); }, []);
 
   const remove = async (p) => {
-    if (!confirm(`Hapus proyek ${p.title} beserta semua fotonya?`)) return;
+    if (!(await notify.confirm(`Hapus proyek ${p.title} beserta semua fotonya?`))) return;
     try {
       await api(`/admin/projects/${p.id}`, { method: 'DELETE' });
       load();
+      notify.success('Data berhasil dihapus.');
     } catch (e) { setError(e.message); }
   };
 
@@ -27,8 +29,6 @@ export default function AdminProjects() {
         title="Proyek"
         actions={<Link to="/admin/projects/new" className="btn btn-accent btn-sm"><i className="bi bi-plus-lg me-1" />Tambah proyek</Link>}
       />
-      {location.state?.flash && <Alert key={location.key} type="success">{location.state.flash}</Alert>}
-      {error && <div className="alert alert-danger">{error}</div>}
 
       <div className="admin-card">
         <div className="table-responsive">

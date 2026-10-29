@@ -3,7 +3,7 @@ import Logo from './Logo.jsx';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import ThemeSwitch from './ThemeSwitch.jsx';
-import Alert from './Alert.jsx';
+import { useNotify } from '../context/NotifyContext.jsx';
 import { APP_NAME } from '../lib/config.js';
 
 const TITLES = [
@@ -52,7 +52,12 @@ export default function AdminLayout() {
     </NavLink>
   );
 
+  const notify = useNotify();
   const flash = location.state?.flash;
+  useEffect(() => {
+    if (flash) notify.success(flash);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key]);
 
   return (
     <div className="admin-shell">
@@ -111,7 +116,6 @@ export default function AdminLayout() {
         </header>
 
         <main className="admin-main">
-          {flash && <Alert key={location.key} type="success">{flash}</Alert>}
           <Outlet />
         </main>
       </div>

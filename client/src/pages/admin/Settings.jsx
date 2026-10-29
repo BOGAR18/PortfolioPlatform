@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../api.js';
 import { AdminTop } from '../../components/AdminLayout.jsx';
-import Alert from '../../components/Alert.jsx';
+import { useNotify } from '../../context/NotifyContext.jsx';
 import { ErrorSummary, FieldError, invalidClass } from '../../components/FormBits.jsx';
 
 const BILINGUAL_HERO = [
@@ -51,7 +51,7 @@ export default function Settings() {
   const [data, setData] = useState(null);
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
-  const [notice, setNotice] = useState('');
+  const notify = useNotify();
   const [resetColors, setResetColors] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -59,7 +59,7 @@ export default function Settings() {
     api('/admin/settings').then(setData).catch((e) => setMessage(e.message));
   }, []);
 
-  if (!data) return (<><AdminTop title="Pengaturan Konten" />{message && <div className="alert alert-danger">{message}</div>}</>);
+  if (!data) return (<><AdminTop title="Pengaturan Konten" /><ErrorSummary message={message} errors={{}} /></>);
 
   const setText = (name, lang, value) => setData((d) => ({
     ...d, texts: { ...d.texts, [name]: { ...d.texts[name], [lang]: value } },
@@ -74,14 +74,13 @@ export default function Settings() {
     e.preventDefault();
     setErrors({});
     setMessage('');
-    setNotice('');
     setBusy(true);
     try {
       await api('/admin/settings', {
         method: 'PUT',
         body: { texts: data.texts, single: data.single, values: data.values, colors: data.colors, reset_colors: resetColors },
       });
-      setNotice('Pengaturan konten berhasil disimpan.');
+      notify.success('Pengaturan konten berhasil disimpan.');
       setResetColors(false);
       const fresh = await api('/admin/settings');
       setData(fresh);
@@ -101,7 +100,6 @@ export default function Settings() {
   return (
     <>
       <AdminTop title="Pengaturan Konten" />
-      {notice && <Alert key={notice} type="success">{notice}</Alert>}
       <ErrorSummary message={message} errors={errors} />
 
       <form onSubmit={save}>

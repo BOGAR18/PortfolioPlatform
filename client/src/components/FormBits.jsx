@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useNotify } from '../context/NotifyContext.jsx';
+
 /** Helper validasi: menampilkan pesan error dari server di bawah kolom */
 export const invalidClass = (errors, name) => (errors && errors[name] ? ' is-invalid' : '');
 
@@ -6,17 +9,13 @@ export function FieldError({ errors, name }) {
   return msg ? <div className="invalid-feedback">{msg}</div> : null;
 }
 
+/** Tidak lagi menampilkan kotak di halaman: pesan gagal dimunculkan sebagai popup. */
 export function ErrorSummary({ message, errors }) {
-  if (!message) return null;
-  const list = Object.values(errors || {});
-  return (
-    <div className="alert alert-danger">
-      <strong>{message}</strong>
-      {list.length > 0 && (
-        <ul className="mb-0 ps-3">
-          {list.map((m) => <li key={m}>{m}</li>)}
-        </ul>
-      )}
-    </div>
-  );
+  const notify = useNotify();
+  useEffect(() => {
+    if (!message) return;
+    notify.error(message, Object.values(errors || {}));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [message, errors]);
+  return null;
 }

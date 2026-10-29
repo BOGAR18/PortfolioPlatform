@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { FieldError, invalidClass } from '../components/FormBits.jsx';
+import { useNotify } from '../context/NotifyContext.jsx';
 
 export default function Login() {
   const { auth, login, t } = useApp();
   const navigate = useNavigate();
+  const notify = useNotify();
   const location = useLocation();
   const [form, setForm] = useState({ email: '', password: '', remember: false });
   const [errors, setErrors] = useState({});
@@ -22,6 +24,7 @@ export default function Login() {
       await login(form.email, form.password, form.remember);
       navigate('/admin');
     } catch (err) {
+      notify.error(err.message);
       setErrors(err.errors && Object.keys(err.errors).length ? err.errors : { email: err.message });
     } finally {
       setBusy(false);

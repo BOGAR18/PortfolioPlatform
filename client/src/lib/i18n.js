@@ -6,8 +6,8 @@ export const UI = {
     nav: { about: 'Tentang', stack: 'Tech Stack', projects: 'Proyek', experience: 'Perjalanan', certifications: 'Sertifikasi', contact: 'Kontak', menu: 'Menu' },
     theme: { label: 'Pilih tema', light: 'Terang', dark: 'Gelap', system: 'Ikuti perangkat' },
     language: 'Bahasa',
-    hero: { greeting: 'Halo, saya', cta_projects: 'Lihat Portofolio', cta_contact: 'Mulai Diskusi', stat_projects: 'Proyek', stat_tech: 'Teknologi', stat_certs: 'Sertifikasi', status: 'Status', available: 'Tersedia', location: 'Lokasi', email: 'Email', phone: 'Telepon' },
-    about: { title: 'Kode yang baik lahir dari pemahaman yang dalam' },
+    hero: { greeting: 'Halo, saya', cta_projects: 'Lihat Portofolio', cta_contact: 'Mulai Diskusi', stat_projects: 'Proyek', stat_tech: 'Teknologi', stat_certs: 'Sertifikasi', status: 'Status', available: 'Terbuka untuk peluang baru', location: 'Lokasi', email: 'Email', phone: 'Telepon' },
+    about: { title: 'Dari ide sederhana menjadi aplikasi yang berguna' },
     stack: { title: 'Teknologi yang kami gunakan', subtitle: 'Dipilih berdasarkan kebutuhan proyek, bukan sekadar tren.' },
     projects: {
       title: 'Proyek pilihan', subtitle: 'Beberapa karya yang mencerminkan cara kami menyelesaikan masalah nyata.',
@@ -40,8 +40,8 @@ export const UI = {
     nav: { about: 'About', stack: 'Tech Stack', projects: 'Projects', experience: 'Journey', certifications: 'Certifications', contact: 'Contact', menu: 'Menu' },
     theme: { label: 'Choose theme', light: 'Light', dark: 'Dark', system: 'Follow device' },
     language: 'Language',
-    hero: { greeting: 'Hello, I’m', cta_projects: 'View Portfolio', cta_contact: 'Start a Conversation', stat_projects: 'Projects', stat_tech: 'Technologies', stat_certs: 'Certifications', status: 'Status', available: 'Available', location: 'Location', email: 'Email', phone: 'Phone' },
-    about: { title: 'Good code comes from deep understanding' },
+    hero: { greeting: 'Hello, I’m', cta_projects: 'View Portfolio', cta_contact: 'Start a Conversation', stat_projects: 'Projects', stat_tech: 'Technologies', stat_certs: 'Certifications', status: 'Status', available: 'Open to new opportunities', location: 'Location', email: 'Email', phone: 'Phone' },
+    about: { title: 'From a simple idea to a useful application' },
     stack: { title: 'Technologies we work with', subtitle: 'Chosen for what the project needs, not for what is trending.' },
     projects: {
       title: 'Selected projects', subtitle: 'A few works that reflect how we solve real problems.',

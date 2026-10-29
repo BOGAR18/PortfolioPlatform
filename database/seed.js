@@ -9,8 +9,8 @@ const SETTINGS = {
   hero_title: `Kami membangun website dan aplikasi yang rapi, cepat, dan mudah dirawat.`,
   hero_subtitle: `${BRAND} membantu bisnis dan instansi mengubah kebutuhan operasional menjadi sistem yang benar-benar dipakai sehari-hari.`,
   card_role: 'Software House · Web & Aplikasi',
-  about_title: 'Kode yang baik lahir dari pemahaman yang dalam',
-  about_title_en: 'Good code comes from deep understanding',
+  about_title: 'Dari ide sederhana menjadi aplikasi yang berguna',
+  about_title_en: 'From a simple idea to a useful application',
   about_text_1: `${BRAND} adalah tim pengembang perangkat lunak yang fokus pada aplikasi web, sistem informasi, dan company profile untuk UMKM, sekolah, dan perusahaan.`,
   about_text_2: 'Setiap proyek dimulai dari memahami cara kerja klien, bukan langsung menulis kode. Hasilnya adalah sistem yang terasa natural dipakai dan mudah dikembangkan.',
   about_values: JSON.stringify([

@@ -28,7 +28,7 @@ function RoleRotor({ text }) {
 }
 
 export default function Home() {
-  const { t, pick, aboutValues, lang } = useApp();
+  const { t, pick, loc, aboutValues, lang } = useApp();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
 
@@ -117,9 +117,9 @@ export default function Home() {
               {data.experiences.map((e) => (
                 <div key={e.id} className={`tl-item reveal${e.end_year === null ? ' is-current' : ''}`}>
                   <div className="tl-period">{e.start_year} – {e.end_year ?? t('experience.present')}</div>
-                  <h3 className="tl-role">{e.role}</h3>
+                  <h3 className="tl-role">{loc(e, 'role')}</h3>
                   <div className="tl-company">{e.company}</div>
-                  {e.description && <p className="tl-desc">{e.description}</p>}
+                  {e.description && <p className="tl-desc">{loc(e, 'description')}</p>}
                 </div>
               ))}
             </div>

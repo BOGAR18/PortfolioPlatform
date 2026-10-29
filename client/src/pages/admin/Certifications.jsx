@@ -2,21 +2,23 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { AdminTop } from '../../components/AdminLayout.jsx';
-import Alert from '../../components/Alert.jsx';
+import { useNotify } from '../../context/NotifyContext.jsx';
 
 export default function Certifications() {
   const location = useLocation();
   const [rows, setRows] = useState(null);
-  const [error, setError] = useState('');
+  const notify = useNotify();
+  const setError = (m) => { if (m) notify.error(m); };
 
   const load = () => api('/admin/certifications').then(setRows).catch((e) => setError(e.message));
   useEffect(() => { load(); }, []);
 
   const remove = async (c) => {
-    if (!confirm(`Hapus sertifikasi ${c.name}?`)) return;
+    if (!(await notify.confirm(`Hapus sertifikasi ${c.name}?`))) return;
     try {
       await api(`/admin/certifications/${c.id}`, { method: 'DELETE' });
       load();
+      notify.success('Data berhasil dihapus.');
     } catch (e) { setError(e.message); }
   };
 
@@ -26,8 +28,6 @@ export default function Certifications() {
         title="Sertifikasi"
         actions={<Link to="/admin/certifications/new" className="btn btn-accent btn-sm"><i className="bi bi-plus-lg me-1" />Tambah sertifikasi</Link>}
       />
-      {location.state?.flash && <Alert key={location.key} type="success">{location.state.flash}</Alert>}
-      {error && <div className="alert alert-danger">{error}</div>}
 
       <div className="admin-card">
         <div className="table-responsive">

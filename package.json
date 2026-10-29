@@ -6,6 +6,7 @@
   "scripts": {
     "db:migrate": "node database/migrate.js",
     "db:seed": "node database/seed.js",
+    "db:revisi": "node database/apply-revisions.js",
     "build": "node scripts/build.mjs",
     "dev:client": "node scripts/build.mjs --watch",
     "dev:server": "node --watch server/index.js",

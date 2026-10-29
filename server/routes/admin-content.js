@@ -3,6 +3,7 @@ import { pool } from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
 import { techLogoUpload, certImageUpload, deleteFiles, deleteUpload } from '../lib/upload.js';
 import { str, isInt, isUrl, isDate, isTrue, fail } from '../lib/validate.js';
+import { resolveEn } from '../lib/translate.js';
 
 const router = Router();
 router.use(requireAuth);
@@ -369,10 +370,11 @@ router.post('/experiences', async (req, res, next) => {
   try {
     const { errors, data } = experienceInput(req.body ?? {});
     if (Object.keys(errors).length) return fail(res, errors);
+    const [role_en, description_en] = await Promise.all([resolveEn(data.role), resolveEn(data.description)]);
     const { rows: [row] } = await pool.query(
-      `INSERT INTO experiences (role, company, start_year, end_year, description, sort_order)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [data.role, data.company, data.start_year, data.end_year, data.description, data.sort_order],
+      `INSERT INTO experiences (role, company, start_year, end_year, description, sort_order, role_en, description_en)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [data.role, data.company, data.start_year, data.end_year, data.description, data.sort_order, role_en, description_en],
     );
     res.status(201).json(row);
   } catch (err) {
@@ -384,11 +386,19 @@ router.put('/experiences/:id', async (req, res, next) => {
   try {
     const { errors, data } = experienceInput(req.body ?? {});
     if (Object.keys(errors).length) return fail(res, errors);
+    const { rows: [old] } = await pool.query(
+      'SELECT role, description, role_en, description_en FROM experiences WHERE id = $1', [req.params.id],
+    );
+    if (!old) return notFound(res);
+    const [role_en, description_en] = await Promise.all([
+      resolveEn(data.role, old.role, old.role_en),
+      resolveEn(data.description, old.description, old.description_en),
+    ]);
     const { rowCount } = await pool.query(
       `UPDATE experiences SET role = $1, company = $2, start_year = $3, end_year = $4,
-              description = $5, sort_order = $6, updated_at = NOW()
-        WHERE id = $7`,
-      [data.role, data.company, data.start_year, data.end_year, data.description, data.sort_order, req.params.id],
+              description = $5, sort_order = $6, role_en = $7, description_en = $8, updated_at = NOW()
+        WHERE id = $9`,
+      [data.role, data.company, data.start_year, data.end_year, data.description, data.sort_order, role_en, description_en, req.params.id],
     );
     if (rowCount === 0) return notFound(res);
     res.json({ ok: true });

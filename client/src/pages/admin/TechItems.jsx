@@ -2,22 +2,24 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { AdminTop } from '../../components/AdminLayout.jsx';
-import Alert from '../../components/Alert.jsx';
+import { useNotify } from '../../context/NotifyContext.jsx';
 import { uploadUrl } from '../../lib/format.js';
 
 export default function TechItems() {
   const location = useLocation();
   const [rows, setRows] = useState(null);
-  const [error, setError] = useState('');
+  const notify = useNotify();
+  const setError = (m) => { if (m) notify.error(m); };
 
   const load = () => api('/admin/tech-items').then(setRows).catch((e) => setError(e.message));
   useEffect(() => { load(); }, []);
 
   const remove = async (item) => {
-    if (!confirm(`Hapus "${item.name}"?`)) return;
+    if (!(await notify.confirm(`Hapus "${item.name}"?`))) return;
     try {
       await api(`/admin/tech-items/${item.id}`, { method: 'DELETE' });
       load();
+      notify.success('Data berhasil dihapus.');
     } catch (e) { setError(e.message); }
   };
 
@@ -27,8 +29,6 @@ export default function TechItems() {
         title="Item Tech"
         actions={<Link to="/admin/tech-items/new" className="btn btn-accent btn-sm"><i className="bi bi-plus-lg me-1" />Tambah item</Link>}
       />
-      {location.state?.flash && <Alert key={location.key} type="success">{location.state.flash}</Alert>}
-      {error && <div className="alert alert-danger">{error}</div>}
 
       <div className="admin-card">
         <div className="table-responsive">

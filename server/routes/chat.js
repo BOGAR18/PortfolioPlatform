@@ -85,7 +85,7 @@ const pick = (s, key, lang) => (lang === 'en' && s[`${key}_en`] ? s[`${key}_en`]
 async function loadKnowledge() {
   const [projects, techs, certs, exps, settings] = await Promise.all([
     pool.query(`
-      SELECT p.id, p.title, p.slug, p.summary, p.description, p.year, p.project_url, p.repo_url,
+      SELECT p.id, p.title, p.slug, p.summary, p.description, p.title_en, p.summary_en, p.year, p.project_url, p.repo_url,
              COALESCE(array_agg(i.name ORDER BY i.name) FILTER (WHERE i.name IS NOT NULL), '{}') AS techs
         FROM projects p
         LEFT JOIN item_tech_project pt ON pt.project_id = p.id
@@ -97,7 +97,7 @@ async function loadKnowledge() {
         FROM category_tech c JOIN item_tech i ON i.category_tech_id = c.id
        GROUP BY c.id, c.name ORDER BY MIN(c.sort_order), c.name`),
     pool.query('SELECT name, issuer, issued_at FROM certifications ORDER BY sort_order, issued_at DESC NULLS LAST'),
-    pool.query('SELECT role, company, start_year, end_year FROM experiences ORDER BY start_year DESC, sort_order'),
+    pool.query('SELECT role, role_en, company, start_year, end_year FROM experiences ORDER BY start_year DESC, sort_order'),
     readSettingsMap(),
   ]);
   return { projects: projects.rows, techs: techs.rows, certs: certs.rows, exps: exps.rows, settings };
@@ -107,9 +107,10 @@ const tokenize = (text) => String(text).toLowerCase().normalize('NFKD').replace(
   .split(/[^a-z0-9#+]+/).filter((t) => t.length > 1 && !STOP.has(t));
 
 function projectReply(p, L, lang) {
-  const lines = [p.title];
+  const en = lang === 'en';
+  const lines = [(en && p.title_en) || p.title];
   if (p.year) lines.push(`${L.year}: ${p.year}`);
-  lines.push(p.summary);
+  lines.push((en && p.summary_en) || p.summary);
   if (p.techs.length) lines.push(`${L.tech_used}: ${p.techs.join(', ')}`);
   if (p.project_url) lines.push(`${L.demo}: ${p.project_url}`);
   if (p.repo_url) lines.push(`${L.repo}: ${p.repo_url}`);
@@ -135,7 +136,7 @@ function intentReply(intent, kb, L, lang) {
     }
     case 'projects':
       if (!kb.projects.length) return L.noProjects;
-      return [L.projects, ...kb.projects.map((p) => `• ${p.title}${p.year ? ` (${p.year})` : ''}`)].join('\n');
+      return [L.projects, ...kb.projects.map((p) => `• ${(lang === 'en' && p.title_en) || p.title}${p.year ? ` (${p.year})` : ''}`)].join('\n');
     case 'tech':
       if (!kb.techs.length) return L.noTech;
       return [L.tech, ...kb.techs.map((c) => `• ${c.category}: ${c.items.join(', ')}`)].join('\n');
@@ -144,7 +145,7 @@ function intentReply(intent, kb, L, lang) {
       return [L.certs, ...kb.certs.map((c) => `• ${c.name} — ${c.issuer}${c.issued_at ? ` (${String(c.issued_at).slice(0, 4)})` : ''}`)].join('\n');
     case 'experience':
       if (!kb.exps.length) return L.noExp;
-      return [L.exp, ...kb.exps.map((e) => `• ${e.start_year} – ${e.end_year ?? L.now}: ${e.role} di ${e.company}`)].join('\n');
+      return [L.exp, ...kb.exps.map((e) => `• ${e.start_year} – ${e.end_year ?? L.now}: ${(lang === 'en' && e.role_en) || e.role} ${lang === 'en' ? 'at' : 'di'} ${e.company}`)].join('\n');
     case 'about': {
       const text = [pick(s, 'about_text_1', lang), pick(s, 'about_text_2', lang)].filter(Boolean).join('\n\n');
       return text || L.notFound;
