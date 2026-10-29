@@ -8,9 +8,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;      /* cegah Chrome Android memperbesar teks sendiri */
-  overflow-x: hidden;
 }
-body { overflow-x: hidden; }
+/* Catatan: jangan pasang overflow di html/body di sini. Itu membuat sidebar admin (sticky) rusak. */
 img, video, iframe { max-width: 100%; }
 
 /* Lebar minimum kolom grid tidak boleh melebihi lebar layar (mencegah overflow di 320px) */

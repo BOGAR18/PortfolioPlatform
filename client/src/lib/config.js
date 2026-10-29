@@ -3,4 +3,4 @@ export const APP_NAME = 'satrio.tegar';
 // Lokasi logo (file ada di client/public/brand/)
 export const LOGO_SRC = '/brand/icon.png';
 export const THEME_KEY = 'portfolio-theme';
-export const LANG_KEY = 'portfolio-lang';
+export const LANG_KEY = 'portfolio-lang-v2';

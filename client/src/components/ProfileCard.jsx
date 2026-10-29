@@ -1,15 +1,18 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useApp } from '../context/AppContext.jsx';
 import { APP_NAME } from '../lib/config.js';
+import { uploadUrl } from '../lib/format.js';
 
 const PHOTO_SRC = '/brand/profile.jpg';
 const REST = { x: 0, y: 0, gx: 50, gy: 50 };
 
 /** Kartu foto profil: miring 3D mengikuti kursor, kilau cahaya, dan cincin berputar. */
 export default function ProfileCard() {
-  const { pick, t } = useApp();
+  const { pick, t, settings } = useApp();
   const ref = useRef(null);
   const [failed, setFailed] = useState(false);
+  const photo = settings?.contact_photo ? uploadUrl(settings.contact_photo) : PHOTO_SRC;
+  useEffect(() => { setFailed(false); }, [photo]);
   const [tilt, setTilt] = useState(REST);
 
   const onMove = (e) => {
@@ -36,7 +39,7 @@ export default function ProfileCard() {
           {failed ? (
             <span className="pf-fallback">{initials}</span>
           ) : (
-            <img src={PHOTO_SRC} alt={APP_NAME} onError={() => setFailed(true)} />
+            <img src={photo} alt={APP_NAME} onError={() => setFailed(true)} />
           )}
           <span className="pf-shine" />
         </div>

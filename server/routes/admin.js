@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { pool } from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
-import { projectImageUpload, deleteFiles, deleteUpload } from '../lib/upload.js';
+import { projectImageUpload, profileImageUpload, deleteFiles, deleteUpload } from '../lib/upload.js';
 import { attachRelations, findProjectById, uniqueSlug, slugify } from '../lib/projects.js';
 import {
   TEXT_KEYS, SINGLE_KEYS, COLOR_KEYS, readSettingsMap, upsertSetting,
@@ -272,7 +272,36 @@ router.get('/settings', async (_req, res, next) => {
       Object.entries(COLOR_KEYS).map(([k, cfg]) => [k, map[k] || cfg.default]),
     );
 
-    res.json({ texts, single, values, colors });
+    res.json({ texts, single, values, colors, photo: map.contact_photo || '' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/* Foto profil di kartu kontak: disimpan sebagai setting 'contact_photo' */
+router.post('/settings/photo', (req, res, next) => {
+  profileImageUpload.single('photo')(req, res, async (err) => {
+    if (err) return next(err);
+    if (!req.file) return fail(res, { photo: 'Pilih file foto terlebih dahulu.' });
+    try {
+      const rel = `profile/${req.file.filename}`;
+      const map = await readSettingsMap();
+      await upsertSetting(pool, 'contact_photo', rel);
+      deleteUpload(map.contact_photo);
+      res.json({ ok: true, photo: rel });
+    } catch (e) {
+      deleteFiles([req.file]);
+      next(e);
+    }
+  });
+});
+
+router.delete('/settings/photo', async (_req, res, next) => {
+  try {
+    const map = await readSettingsMap();
+    await upsertSetting(pool, 'contact_photo', null);
+    deleteUpload(map.contact_photo);
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

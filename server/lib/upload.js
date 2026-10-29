@@ -94,6 +94,7 @@ function makeUploader(folder, { maxBytes, allow, files = 1 }) {
 export const projectImageUpload = makeUploader('projects', { maxBytes: 3 * 1024 * 1024, allow: RASTER, files: 10 });
 export const techLogoUpload = makeUploader('tech', { maxBytes: 1024 * 1024, allow: [...RASTER, 'image/svg+xml'] });
 export const certImageUpload = makeUploader('certifications', { maxBytes: 2 * 1024 * 1024, allow: RASTER });
+export const profileImageUpload = makeUploader('profile', { maxBytes: 3 * 1024 * 1024, allow: RASTER });
 
 export function deleteFiles(files = []) {
   for (const f of files) {

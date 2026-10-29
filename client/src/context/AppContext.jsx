@@ -15,7 +15,7 @@ function applyTheme(pref) {
 }
 
 export function AppProvider({ children }) {
-  const [lang, setLangState] = useState(() => localStorage.getItem(LANG_KEY) || 'id');
+  const [lang, setLangState] = useState(() => localStorage.getItem(LANG_KEY) || 'en');
   const [theme, setThemeState] = useState(() => localStorage.getItem(THEME_KEY) || 'dark');
   const [settings, setSettings] = useState({});
   const [auth, setAuth] = useState({ user: null, registrationOpen: false, ready: false });

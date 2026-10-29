@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../api.js';
+import { uploadUrl } from '../../lib/format.js';
 import { AdminTop } from '../../components/AdminLayout.jsx';
 import { useNotify } from '../../context/NotifyContext.jsx';
 import { ErrorSummary, FieldError, invalidClass } from '../../components/FormBits.jsx';
@@ -42,6 +43,75 @@ function Bilingual({ name, label, rows = 2, value, onChange, errors }) {
         <textarea id={`en_${name}`} rows={rows} className={`form-control${err ? ' is-invalid' : ''}`}
           value={value.en} onChange={(e) => onChange(name, 'en', e.target.value)} />
         <FieldError errors={errors} name={`texts.${name}`} />
+      </div>
+    </div>
+  );
+}
+
+/** Kartu upload foto profil. Upload dan hapus langsung tersimpan, terpisah dari tombol simpan utama. */
+function PhotoField({ photo, onChanged }) {
+  const notify = useNotify();
+  const [file, setFile] = useState(null);
+  const [fileKey, setFileKey] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const src = photo ? uploadUrl(photo) : '/brand/profile.jpg';
+
+  const upload = async () => {
+    if (!file) return;
+    setErr('');
+    setBusy(true);
+    try {
+      const fd = new FormData();
+      fd.append('photo', file);
+      const res = await api('/admin/settings/photo', { method: 'POST', body: fd });
+      onChanged(res.photo);
+      setFile(null);
+      setFileKey((k) => k + 1);
+      notify.success('Foto profil berhasil diganti.');
+    } catch (e) {
+      setErr(e.message);
+      notify.error(e.message, Object.values(e.errors || {}));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const remove = async () => {
+    setErr('');
+    setBusy(true);
+    try {
+      await api('/admin/settings/photo', { method: 'DELETE' });
+      onChanged('');
+      notify.success('Foto dikembalikan ke foto bawaan.');
+    } catch (e) {
+      setErr(e.message);
+      notify.error(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="admin-card mb-4">
+      <h2 className="h6 mb-1">Foto profil (bagian kontak)</h2>
+      <p className="text-muted-2 small mb-3">
+        Foto ini tampil di kartu profil pada bagian Kontak. Format JPG, PNG, atau WEBP, maksimal 3 MB.
+      </p>
+      <div className="d-flex flex-wrap align-items-center gap-3">
+        <img src={src} alt="Pratinjau foto profil"
+          style={{ width: 120, height: 150, objectFit: 'cover', borderRadius: 14, border: '1px solid var(--border)' }} />
+        <div style={{ flex: 1, minWidth: 220 }}>
+          <input key={fileKey} type="file" accept="image/jpeg,image/png,image/webp" className="form-control mb-2"
+            onChange={(e) => setFile(e.target.files[0] || null)} />
+          <div className="d-flex flex-wrap gap-2">
+            <button type="button" className="btn btn-accent btn-sm" disabled={!file || busy} onClick={upload}>Unggah foto</button>
+            {photo && (
+              <button type="button" className="btn btn-soft btn-sm" disabled={busy} onClick={remove}>Kembali ke foto bawaan</button>
+            )}
+          </div>
+          {err && <div className="form-text text-danger mt-2">{err}</div>}
+        </div>
       </div>
     </div>
   );
@@ -187,6 +257,9 @@ export default function Settings() {
             </div>
           </div>
         </div>
+
+        {/* FOTO PROFIL */}
+        <PhotoField photo={data.photo} onChanged={(photo) => setData((d) => ({ ...d, photo }))} />
 
         {/* KONTAK */}
         <div className="admin-card mb-4">
