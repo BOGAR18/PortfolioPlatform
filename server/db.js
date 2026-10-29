@@ -7,5 +7,5 @@ pg.types.setTypeParser(1082, (value) => value);
 export const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
-  max: 10,
+  max: process.env.VERCEL ? 3 : 10,
 });

@@ -10,10 +10,12 @@ import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
 import adminContentRoutes from './routes/admin-content.js';
 import chatRoutes from './routes/chat.js';
+import { useRemote, publicUrl } from './lib/upload.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PgStore = connectPgSimple(session);
-const isProd = process.env.NODE_ENV === 'production';
+const isVercel = Boolean(process.env.VERCEL);
+const isProd = process.env.NODE_ENV === 'production' || isVercel;
 
 const app = express();
 // Wajib di belakang proxy (Render, Railway, Nginx) agar cookie secure dan rate limit berfungsi
@@ -22,7 +24,7 @@ app.use(express.json({ limit: '2mb' }));
 
 app.use(
   session({
-    store: new PgStore({ pool, createTableIfMissing: true }),
+    store: new PgStore({ pool, createTableIfMissing: !isVercel }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -30,7 +32,16 @@ app.use(
   }),
 );
 
-app.use('/uploads', express.static(path.join(root, 'public', 'uploads')));
+if (useRemote) {
+  // Foto disimpan di Supabase Storage; URL /uploads/... diarahkan ke sana
+  app.get('/uploads/*path', (req, res) => {
+    const rel = [].concat(req.params.path).join('/');
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.redirect(302, publicUrl(rel));
+  });
+} else {
+  app.use('/uploads', express.static(path.join(root, 'public', 'uploads')));
+}
 app.use(express.static(path.join(root, 'dist')));
 
 app.use('/api', publicRoutes);
@@ -61,5 +72,9 @@ app.use((err, _req, res, next) => {
   res.status(500).json({ message: 'Terjadi kesalahan pada server.' });
 });
 
-const port = Number(process.env.PORT) || 8000;
-app.listen(port, () => console.log(`Server berjalan di http://localhost:${port}`));
+if (!isVercel) {
+  const port = Number(process.env.PORT) || 8000;
+  app.listen(port, () => console.log(`Server berjalan di http://localhost:${port}`));
+}
+
+export default app;
