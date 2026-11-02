@@ -13,3 +13,13 @@ createRoot(document.getElementById('root')).render(
     </AppProvider>
   </BrowserRouter>,
 );
+
+// Layar pembuka singkat, lalu memudar (langsung hilang jika pengguna mengurangi animasi)
+const preloader = document.getElementById('preloader');
+if (preloader) {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setTimeout(() => {
+    preloader.classList.add('is-hidden');
+    setTimeout(() => preloader.remove(), 800);
+  }, reduce ? 0 : 1100);
+}

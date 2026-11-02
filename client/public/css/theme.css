@@ -768,7 +768,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spac
 
 /* 24. CHATBOT ------------------------------------------------------------- */
 .chat-fab {
-  position: fixed; left: 22px; bottom: 22px; z-index: 1500;
+  position: fixed; right: 17px; bottom: 82px; z-index: 1500;
   width: 58px; height: 58px; border-radius: 50%; border: 0;
   background: var(--accent); color: var(--on-accent); font-size: 1.3rem;
   box-shadow: 0 18px 40px -12px var(--accent); cursor: pointer;
@@ -776,7 +776,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spac
 }
 .chat-fab:hover { transform: translateY(-3px) scale(1.04); }
 .chat-panel {
-  position: fixed; left: 22px; bottom: 94px; z-index: 1500;
+  position: fixed; right: 22px; bottom: 152px; z-index: 1500;
   width: min(390px, calc(100vw - 44px)); height: min(560px, 70vh);
   display: flex; flex-direction: column; overflow: hidden;
   background: var(--surface); border: 1px solid var(--border); border-radius: 22px;
@@ -803,7 +803,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spac
 .typing span:nth-child(2) { animation-delay: .15s; }
 .typing span:nth-child(3) { animation-delay: .3s; }
 @keyframes typing { 0%, 60%, 100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
-@media (max-width: 640px) { .chat-fab { left: 14px; bottom: 14px; } .chat-panel { left: 14px; bottom: 84px; } }
+@media (max-width: 640px) { .chat-fab { right: 21px; bottom: 82px; } .chat-panel { right: 16px; bottom: 144px; } }
 
 /* 24. PERBAIKAN TAMPILAN HP ------------------------------------------------ */
 @media (max-width: 640px) {
@@ -822,5 +822,5 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; letter-spac
   .hero2 .hero-actions .btn-lg { width: 100%; min-width: 0; justify-content: center; }
 
   /* tombol chat lebih kecil dan tidak menutupi konten */
-  .chat-fab { width: 50px; height: 50px; font-size: 1.15rem; left: 16px; bottom: 16px; }
+  .chat-fab { width: 50px; height: 50px; font-size: 1.15rem; right: 21px; bottom: 82px; }
 }

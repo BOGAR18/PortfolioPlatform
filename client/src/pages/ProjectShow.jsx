@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { api } from '../api.js';
 import { useApp } from '../context/AppContext.jsx';
 import ProjectCard from '../components/ProjectCard.jsx';
+import Lightbox from '../components/Lightbox.jsx';
 import { APP_NAME } from '../lib/config.js';
 import { uploadUrl } from '../lib/format.js';
 
@@ -11,6 +12,7 @@ export default function ProjectShow() {
   const { t, loc } = useApp();
   const [p, setP] = useState(null);
   const [error, setError] = useState('');
+  const [lightbox, setLightbox] = useState(null);
 
   useEffect(() => {
     setP(null);
@@ -62,7 +64,10 @@ export default function ProjectShow() {
                   <div className="carousel-inner">
                     {images.map((img, i) => (
                       <div key={img.id} className={`carousel-item${i === 0 ? ' active' : ''}`}>
-                        <img src={uploadUrl(img.path)} alt={img.caption || loc(p, 'title')} />
+                        <button type="button" className="gallery-zoom" onClick={() => setLightbox(i)} aria-label={t('projects.lightbox.open')}>
+                          <img src={uploadUrl(img.path)} alt={img.caption || loc(p, 'title')} />
+                          <span className="gallery-zoom-icon" aria-hidden="true"><i className="bi bi-arrows-fullscreen" /></span>
+                        </button>
                         {img.caption && <div className="carousel-caption">{img.caption}</div>}
                       </div>
                     ))}
@@ -144,6 +149,14 @@ export default function ProjectShow() {
             </div>
           </div>
         </section>
+      )}
+      {lightbox !== null && (
+        <Lightbox
+          images={images.map((img) => ({ src: uploadUrl(img.path), alt: img.caption || loc(p, 'title'), caption: img.caption }))}
+          index={lightbox}
+          onIndex={setLightbox}
+          onClose={() => setLightbox(null)}
+        />
       )}
     </>
   );

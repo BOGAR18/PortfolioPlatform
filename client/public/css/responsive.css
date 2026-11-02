@@ -157,7 +157,7 @@ body {
 
 /* 6. CHATBOT -------------------------------------------------------------- */
 @media (max-width: 767.98px) {
-  .chat-panel { height: min(520px, 72svh); bottom: 84px; }
+  .chat-panel { height: min(520px, 72svh); bottom: 144px; }
   .chat-form input { font-size: 16px; }
 }
 

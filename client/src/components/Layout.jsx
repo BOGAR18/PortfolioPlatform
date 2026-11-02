@@ -28,13 +28,13 @@ export default function Layout() {
   }, [pathname, hash]);
 
   return (
-    <>
+    <div className="site-shell">
       <Navbar />
       <main>
         <Outlet />
       </main>
       <Footer />
       <Chatbot />
-    </>
+    </div>
   );
 }

@@ -4,21 +4,29 @@ import { useApp } from '../context/AppContext.jsx';
 
 /** Asisten portofolio: menjawab hanya berdasarkan data portofolio di database. */
 export default function Chatbot() {
-  const { lang } = useApp();
+  const { lang, t } = useApp();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const endRef = useRef(null);
+  const greetedLang = useRef(null);
 
+  // Sapaan diambil ulang setiap bahasa berganti, sehingga isi chat ikut bahasa yang aktif
   useEffect(() => {
-    if (open && messages.length === 0) {
-      api('/chat', { method: 'POST', body: { message: '', lang } })
-        .then((d) => { setMessages([{ from: 'bot', text: d.reply }]); setSuggestions(d.suggestions || []); })
-        .catch(() => {});
-    }
-  }, [open]);
+    if (!open || greetedLang.current === lang) return;
+    greetedLang.current = lang;
+    setMessages([]);
+    setSuggestions([]);
+    api('/chat', { method: 'POST', body: { message: '', lang } })
+      .then((d) => {
+        if (greetedLang.current !== lang) return; // bahasa sudah berganti, abaikan balasan lama
+        setMessages([{ from: 'bot', text: d.reply }]);
+        setSuggestions(d.suggestions || []);
+      })
+      .catch(() => {});
+  }, [open, lang]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -43,15 +51,16 @@ export default function Chatbot() {
 
   return (
     <>
-      <button type="button" className="chat-fab" onClick={() => setOpen((o) => !o)} aria-label="Buka asisten portofolio">
+      <button type="button" className="chat-fab" onClick={() => setOpen((o) => !o)}
+        aria-label={open ? t('chat.close') : t('chat.open')}>
         <i className={`bi ${open ? 'bi-x-lg' : 'bi-chat-dots'}`} />
       </button>
 
       {open && (
-        <div className="chat-panel" role="dialog" aria-label="Asisten portofolio">
+        <div className="chat-panel" role="dialog" aria-label={t('chat.title')}>
           <div className="chat-head">
-            <div className="chat-title">Asisten portofolio</div>
-            <div className="chat-sub">Menjawab berdasarkan data portofolio ini</div>
+            <div className="chat-title">{t('chat.title')}</div>
+            <div className="chat-sub">{t('chat.sub')}</div>
           </div>
 
           <div className="chat-body">
@@ -72,8 +81,8 @@ export default function Chatbot() {
 
           <form className="chat-form" onSubmit={(e) => { e.preventDefault(); send(input); }}>
             <input value={input} onChange={(e) => setInput(e.target.value)} maxLength={500}
-              placeholder={lang === 'en' ? 'Type a question...' : 'Tulis pertanyaan...'} />
-            <button type="submit" disabled={busy || !input.trim()} aria-label="Kirim">
+              placeholder={t('chat.placeholder')} />
+            <button type="submit" disabled={busy || !input.trim()} aria-label={t('chat.send')}>
               <i className="bi bi-send" />
             </button>
           </form>
