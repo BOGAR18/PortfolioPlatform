@@ -144,3 +144,36 @@ body { overflow-x: clip; }
   .row.g-5 { margin-left: 0; margin-right: 0; }
   .row.g-5 > [class*="col-"] { padding-left: 0; padding-right: 0; }
 }
+
+/* ==========================================================================
+   HP (di bawah 768px): semua judul section rata tengah
+   ========================================================================== */
+@media (max-width: 767.98px) {
+  /* Hero: jarak antar elemen dirapatkan, tidak ada ruang kosong berlebih */
+  .hero2 { min-height: auto; padding-bottom: 56px; }
+  .hero2 .row > .col-lg-5 { margin-top: .75rem; }
+  .hero2 .role-rotor { margin-top: 1.1rem; }
+  .hero2-sub { margin-top: 1rem; }
+  .hero2 .hero-actions { margin-top: 1.6rem; }
+  .hero2 .mt-4 { margin-top: 1.25rem !important; margin-bottom: 0; }
+
+  /* Section: eyebrow, judul, subjudul, dan link di tengah */
+  .section-split,
+  .section-split > div,
+  .section-split-end {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .section-split-end { max-width: 100%; }
+  .section-split .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+  }
+  .section-title,
+  .section-sub,
+  .section-split .section-sub { text-align: center; margin-left: auto; margin-right: auto; }
+  .section-split .link-arrow { display: inline-flex; justify-content: center; }
+}
