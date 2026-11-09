@@ -177,3 +177,22 @@ body { overflow-x: clip; }
   .section-split .section-sub { text-align: center; margin-left: auto; margin-right: auto; }
   .section-split .link-arrow { display: inline-flex; justify-content: center; }
 }
+
+/* ==========================================================================
+   HALAMAN LAIN: detail proyek, admin
+   ========================================================================== */
+
+/* Detail proyek: tautan kembali ikut rata tengah di HP */
+@media (max-width: 767.98px) {
+  .page-head .back-link { justify-content: center; display: inline-flex; width: 100%; }
+}
+
+/* Admin: dekorasi latar tidak boleh membuat scroll horizontal */
+.admin-shell { overflow-x: clip; }
+
+/* Admin di HP: tabel tetap lebar, digeser ke samping, tidak terhimpit */
+@media (max-width: 767.98px) {
+  .admin-main .table-responsive { -webkit-overflow-scrolling: touch; }
+  .admin-main .table-responsive > .table { min-width: 640px; }
+  .admin-top h1 { font-size: clamp(1.5rem, 7vw, 1.8rem); }
+}
