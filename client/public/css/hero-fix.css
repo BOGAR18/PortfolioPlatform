@@ -1,0 +1,146 @@
+/* ==========================================================================
+   HERO FIX — dimuat paling akhir. Mengatur layout hero agar proporsional
+   di HP (320px) sampai desktop besar. Warna tidak diubah.
+   ========================================================================== */
+
+/* Dasar: cegah teks/nama melebar keluar layar */
+body { overflow-x: clip; }
+.hero2 { overflow-x: hidden; }
+.hero2 .container { width: 100%; }
+.hero2 .hero-title { overflow-wrap: normal; word-break: keep-all; }
+
+/* --- HP & tablet (di bawah 992px): semua konten di tengah --------------- */
+@media (max-width: 991.98px) {
+  .hero2 {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding: calc(var(--nav-h) + 28px + env(safe-area-inset-top, 0px)) 0
+             calc(96px + env(safe-area-inset-bottom, 0px));
+  }
+  .hero2 .row {
+    min-height: 0;
+    justify-content: center;
+    margin: 0;
+  }
+  .hero2 .row > [class*="col-"] {
+    width: 100%;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding: 0;
+  }
+  .hero2 .row > .col-lg-5 { margin-top: 2rem; }
+
+  .hero3-eyebrow {
+    text-align: center;
+    font-size: .72rem;
+    letter-spacing: .28em;
+    margin-bottom: 1rem;
+  }
+
+  /* Nama: pas di tengah, ukuran mengikuti lebar layar */
+  .hero2 .hero-title {
+    font-size: clamp(3.2rem, 17vw, 6.4rem);
+    line-height: .98;
+    letter-spacing: -.05em;
+    text-align: center;
+    margin: 0 auto;
+  }
+  .hero2 .hero-line { display: block; text-align: center; }
+  .hero2 .hero-title .w { padding-right: 0; }
+
+  /* Peran (Software Developer & SAP Consultant) di tengah */
+  .hero2 .role-rotor {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: .6rem;
+    margin-top: 1.4rem;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+  .hero2 .role-rotor .role-text { text-align: center; }
+
+  .hero2-sub {
+    margin: 1.5rem auto 0;
+    max-width: 30rem;
+    font-size: clamp(1rem, 3.8vw, 1.12rem);
+    line-height: 1.7;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  /* Tombol: tumpuk, lebar seragam, di tengah */
+  .hero2 .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .75rem;
+    width: 100%;
+    max-width: 420px;
+    margin: 2rem auto 0;
+  }
+  .hero2 .hero-actions .btn-lg {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    padding: .9rem 1.2rem;
+  }
+
+  /* Ikon sosial di tengah */
+  .hero2 .mt-4 {
+    display: flex;
+    justify-content: center;
+  }
+  .hero2 .social-row { justify-content: center; }
+}
+
+/* HP sangat kecil (≤ 380px) */
+@media (max-width: 380px) {
+  .hero2 .hero-title { font-size: clamp(2.9rem, 16vw, 4rem); }
+  .hero2 .container { padding-left: 1rem; padding-right: 1rem; }
+  .hero2 .hero-actions .btn-lg { font-size: .92rem; }
+}
+
+/* --- Desktop & laptop (992px ke atas): dua kolom yang seimbang ---------- */
+@media (min-width: 992px) {
+  .hero2 {
+    min-height: 100svh;
+    padding: calc(var(--nav-h) + 40px) 0 80px;
+  }
+  .hero2 .row { align-items: center; min-height: 0; }
+  .hero2 .hero-title {
+    font-size: clamp(5rem, 9vw, 9.5rem);
+    line-height: .92;
+    letter-spacing: -.055em;
+  }
+  .hero2 .hero-line { display: block; }
+  .hero2 .row > .col-lg-5 { margin-top: 0; }
+  .hero2-sub { max-width: 28rem; }
+}
+
+/* Layar sangat lebar (≥ 1600px): batasi agar tidak terlalu melebar */
+@media (min-width: 1600px) {
+  .hero2 .container { max-width: 1400px; }
+  .hero2 .hero-title { font-size: clamp(6rem, 8vw, 10rem); }
+}
+
+/* Layar pendek (HP landscape / laptop kecil) */
+@media (max-height: 560px) and (orientation: landscape) {
+  .hero2 { min-height: auto; padding-top: calc(var(--nav-h) + 16px); padding-bottom: 48px; }
+  .hero2 .hero-title { font-size: clamp(2.6rem, 9vw, 4.5rem); }
+}
+
+/* Gerakan dikurangi: tampilkan langsung tanpa animasi */
+@media (prefers-reduced-motion: reduce) {
+  .hero2 .hero-title .w { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+}
+
+/* Baris Bootstrap dengan gutter besar (mis. section Tentang) jangan melebar
+   melewati container di HP — penyebab scroll horizontal beberapa piksel */
+@media (max-width: 991.98px) {
+  .row.g-5 { margin-left: 0; margin-right: 0; }
+  .row.g-5 > [class*="col-"] { padding-left: 0; padding-right: 0; }
+}
