@@ -37,7 +37,7 @@ export default function Home() {
   }, []);
 
   if (error) return <p className="container"><span className="alert alert-danger d-block">{error}</span></p>;
-  if (!data) return <p className="container py-5">{t('loading')}</p>;
+  if (!data) return null;
 
   const s = data.settings;
   const title = pick('hero_title');

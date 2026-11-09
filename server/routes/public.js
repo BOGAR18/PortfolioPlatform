@@ -6,6 +6,13 @@ import { readSettingsMap, COLOR_KEYS } from '../lib/settings.js';
 const router = Router();
 const PER_PAGE = 9;
 
+// Cache di CDN Vercel 30 detik (browser selalu cek ulang) agar tidak menembak database tiap kunjungan
+const cdnCache = (_req, res, next) => {
+  res.set('Cache-Control', 'public, max-age=0, s-maxage=30, stale-while-revalidate=300');
+  next();
+};
+router.use(['/home', '/projects', '/settings'], cdnCache);
+
 router.get('/home', async (_req, res, next) => {
   try {
     const [cats, items, exps, certs, projects, counts, settings] = await Promise.all([
@@ -80,7 +87,7 @@ router.get('/theme.css', async (_req, res, next) => {
     let css = '';
     if (light.length) css += `[data-bs-theme="light"]{${light.join(';')}}`;
     if (dark.length) css += `[data-bs-theme="dark"]{${dark.join(';')}}`;
-    res.set('Cache-Control', 'no-cache').type('text/css').send(css);
+    res.set('Cache-Control', 'public, max-age=0, s-maxage=30, stale-while-revalidate=300').type('text/css').send(css);
   } catch (err) {
     next(err);
   }

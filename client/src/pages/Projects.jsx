@@ -18,7 +18,7 @@ export default function Projects() {
       .catch(() => setResult({ data: [], meta: { page: 1, lastPage: 1 } }));
   }, [page]);
 
-  if (!result) return <p className="container py-5">{t('loading')}</p>;
+  if (!result) return null;
 
   return (
     <>

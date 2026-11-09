@@ -25,17 +25,19 @@ export async function attachRelations(projects) {
   if (projects.length === 0) return [];
   const ids = projects.map((p) => p.id);
 
-  const { rows: images } = await pool.query(
-    `SELECT id, project_id, path, caption, sort_order FROM project_images
-      WHERE project_id = ANY($1::int[]) ORDER BY sort_order, id`,
-    [ids],
-  );
-  const { rows: techs } = await pool.query(
-    `SELECT pt.project_id, i.id, i.name, i.logo
-       FROM item_tech_project pt JOIN item_tech i ON i.id = pt.item_tech_id
-      WHERE pt.project_id = ANY($1::int[]) ORDER BY i.name`,
-    [ids],
-  );
+  const [{ rows: images }, { rows: techs }] = await Promise.all([
+    pool.query(
+      `SELECT id, project_id, path, caption, sort_order FROM project_images
+        WHERE project_id = ANY($1::int[]) ORDER BY sort_order, id`,
+      [ids],
+    ),
+    pool.query(
+      `SELECT pt.project_id, i.id, i.name, i.logo
+         FROM item_tech_project pt JOIN item_tech i ON i.id = pt.item_tech_id
+        WHERE pt.project_id = ANY($1::int[]) ORDER BY i.name`,
+      [ids],
+    ),
+  ]);
 
   return projects.map((p) => ({
     ...p,

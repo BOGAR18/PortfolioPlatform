@@ -25,7 +25,7 @@ export default function ProjectShow() {
   }, [p, loc]);
 
   if (error) return <p className="container"><span className="alert alert-danger d-block">{error}</span></p>;
-  if (!p) return <p className="container py-5">{t('loading')}</p>;
+  if (!p) return null;
 
   const images = p.images;
 
