@@ -182,9 +182,33 @@ body { overflow-x: clip; }
    HALAMAN LAIN: detail proyek, admin
    ========================================================================== */
 
-/* Detail proyek: tautan kembali ikut rata tengah di HP */
+/* Detail proyek di HP: seluruh header (tombol kembali, judul, deskripsi) rata kiri */
 @media (max-width: 767.98px) {
-  .page-head .back-link { justify-content: center; display: inline-flex; width: 100%; }
+  .page-head-detail .back-link {
+    display: inline-flex;
+    justify-content: flex-start;
+    width: auto;
+    margin-bottom: 1.25rem;
+  }
+  .page-head-detail .section-title,
+  .page-head-detail .section-sub {
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Jarak judul ke deskripsi di header halaman */
+.page-head .section-title { margin-bottom: 1rem; }
+.page-head .section-sub { line-height: 1.7; }
+
+/* Padding atas header halaman: tidak menempel ke navbar (menimpa theme.css) */
+.page-head { padding-top: calc(var(--nav-h) + clamp(2.25rem, 5vw, 4rem)); }
+
+/* Tombol chat & ikon perbesar gambar di HP: tidak saling menumpuk */
+@media (max-width: 640px) {
+  .chat-fab { width: 52px; height: 52px; font-size: 1.15rem; bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+  .gallery-zoom-icon { top: 12px; bottom: auto; right: 12px; width: 38px; height: 38px; }
 }
 
 /* Admin: dekorasi latar tidak boleh membuat scroll horizontal */

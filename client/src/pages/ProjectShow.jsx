@@ -31,7 +31,7 @@ export default function ProjectShow() {
 
   return (
     <>
-      <section className="page-head pb-0">
+      <section className="page-head page-head-detail pb-0">
         <div className="container">
           <Link to="/projects" className="back-link"><i className="bi bi-arrow-left" />{t('projects.back')}</Link>
           <h1 className="section-title">{loc(p, 'title')}</h1>

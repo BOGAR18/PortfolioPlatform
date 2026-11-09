@@ -24,7 +24,7 @@ export default function ProjectCard({ project, variant = 'default' }) {
               <span key={tech.id} className="chip">{tech.name}</span>
             ))}
           </div>
-          <span className="link-more">{t('projects.detail')} →</span>
+          <span className="link-more">{t('projects.detail')}</span>
         </div>
       </div>
     </article>
